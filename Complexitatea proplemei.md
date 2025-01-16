@@ -1,4 +1,4 @@
-##Functia 'inventory_cost'
+## Functia 'inventory_cost'
 1. **Cel mai favorabil caz:**
    -Complexitatea este determinata de iterarea prin lista 'demand': **O(n)** unde 'n' este numarul de elemnte din 'demand'
 
@@ -9,7 +9,7 @@
     -Costurile sunt calculate pentru fiecare element, iar conditiile din 'if' sunt evaluate constant, iar complexitatea ramane **O(n)**
 
 
-##Functia 'simulate_inventory'
+## Functia 'simulate_inventory'
 1. **Cel mai favorabil caz:**
     - Daca inventarul este intotdeauna suficient, doar lista 'inventory_levels' este actualizata complexitatea este **O(n)**
 2. **Cel mai defavorabil caz:** 
@@ -18,7 +18,7 @@
    - Cereri aleatoare si comportament variabil al inventarului, complexitatea ramane liniara **O(n)**
 
 
-##Functia 'differential_evolution'
+## Functia 'differential_evolution'
 1. **Cel mai favorabil caz:**
     -Daca optimizarea converge rapid, numarul de iteratii este minim iar complexitatea depinde de numarul de membri ai populaiei ('P') si numarul de parametri ('D'): **O(P \* D \* K\_min)** unde 'K\_min' este numarul minim de iteratii.
 2. **Cel mai defavorabil caz:**
@@ -28,26 +28,26 @@
 
 
 
-#Demonstratia corectitudinii pentru functia simulate_inventory:
+# Demonstratia corectitudinii pentru functia simulate_inventory:
 
-###Preconditii:
+### Preconditii:
     -'demand' este o lista de cereri pentru fiecare perioada.
     -'reorder_point' este punctul optim de reaprovizionare
     -'order_quantity' este cantitatea optima de reaprovizionare
 
-###Scopul
+### Scopul
 Scopul functiei este sa calculeze nivelurile de inventar pentru fiecare perioada.
 
-###Postconditii:
+### Postconditii:
     -lista rezultata 'inventory_levels' reflecta corect evolutia inventarului in fiecare perioada tinand cont de cererea('d') si reaprovizionarea daca inventarul scade sub sau egal cu 'reorder_point'.
 
-###Demonstratia corectitudinii:
-####Initializare:
+### Demonstratia corectitudinii:
+### Initializare:
 
 La inceputul executiei:
     -'inventory_level' este initializat cu valoarea 'reorder_point', ceea ce asigura ca punctul de plecare este corect conform parametrilor primiti.
 
-####Mentinerea invariantelor:
+### Mentinerea invariantelor:
 In fiecare iteratie:
 - **Verificarea conditiei**
         -Se verifica daca 'inventory_level <= reorder_point'. Daca aceasta conditie este adevarata, se adauga 'order_quantity' la inventar.
@@ -59,11 +59,11 @@ In fiecare iteratie:
           -'inventory_level -= d':
             -Cererea curenta este scazuta din inventar, actualizand nivelul de inventar pentru urmatoarea perioada.
 
-####Invarianti:
+### Invarianti:
 - Inventarul este actualizat corect in functie de cerere si reaprovizionare.
 - Fiecare pas adauga un singur element la 'inventory_levels'.
 
-####Finalizare:
+### Finalizare:
 La sfarsitul buclei:
 - Lista 'inventory_levels' contine valorile nivelurilor de inventar pentru toate perioadele cererii.
 - Functia returneaza lista completa.
