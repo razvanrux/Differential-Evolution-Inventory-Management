@@ -17,15 +17,20 @@ def inventory_cost(params, demand, ordering_cost, holding_cost, shortage_cost):
     inventory_level = reorder_point
 
     for d in demand:
-        if inventory_level <= reorder_point:
+        # Subtract demand first
+        inventory_level -= d
+
+        # Apply shortage cost if inventory is negative
+        if inventory_level < 0:
+            total_cost += shortage_cost * abs(inventory_level)
+            inventory_level = 0  # Reset inventory to 0 after shortage is accounted
+
+        # Restock if inventory is below reorder point
+        if inventory_level <= reorder_point and order_quantity > 0:
             total_cost += ordering_cost
             inventory_level += order_quantity
 
-        total_cost += holding_cost * max(inventory_level, 0)
-
-        if inventory_level < d:
-            total_cost += shortage_cost * (d - inventory_level)
-
-        inventory_level -= d
+        # Apply holding cost after restocking
+        total_cost += holding_cost * inventory_level
 
     return total_cost
