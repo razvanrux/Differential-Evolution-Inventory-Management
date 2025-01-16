@@ -1,78 +1,69 @@
-# Function Analysis
+##Functia 'inventory_cost'
+1. **Cel mai favorabil caz:**
+   -Complexitatea este determinata de iterarea prin lista 'demand': **O(n)** unde 'n' este numarul de elemnte din 'demand'
 
-## Function `inventory_cost`
+2. **Cel mai defavorabil caz:**
+    -Cererea este intotdeauna mai mare decat 'inventory_level', totusi complexitatea ramane liniara deoarece se efectueaza o singura iteratie prin lista 'demand' deci complexitatea este de **O(n)**
+       
+   3. **Cazul mediu:**
+    -Costurile sunt calculate pentru fiecare element, iar conditiile din 'if' sunt evaluate constant, iar complexitatea ramane **O(n)**
 
-1. **Best Case:**
-   - Complexity is determined by iterating through the `demand` list: **O(n)**, where `n` is the number of elements in `demand`.
 
-2. **Worst Case:**
-   - Demand always exceeds `inventory_level`. However, the complexity remains linear because only one iteration through the `demand` list is performed, so the complexity is **O(n)**.
+##Functia 'simulate_inventory'
+1. **Cel mai favorabil caz:**
+    - Daca inventarul este intotdeauna suficient, doar lista 'inventory_levels' este actualizata complexitatea este **O(n)**
+2. **Cel mai defavorabil caz:** 
+   - Daca inventarul scade sub punctul de reaprovizionare pentru fiecare cerere, o comanda suplimentara este plasata la fiecare pas, totusi, operatiile se efectueaza intr-o singura iteratie, deci complexitatea ramane **O(n)**
+3. **Cazul mediu:**
+   - Cereri aleatoare si comportament variabil al inventarului, complexitatea ramane liniara **O(n)**
 
-3. **Average Case:**
-   - Costs are calculated for each element, and the `if` conditions are evaluated in constant time. The complexity remains **O(n)**.
 
-## Function `simulate_inventory`
+##Functia 'differential_evolution'
+1. **Cel mai favorabil caz:**
+    -Daca optimizarea converge rapid, numarul de iteratii este minim iar complexitatea depinde de numarul de membri ai populaiei ('P') si numarul de parametri ('D'): **O(P \* D \* K\_min)** unde 'K\_min' este numarul minim de iteratii.
+2. **Cel mai defavorabil caz:**
+-Algoritmul necesita toate iteratiile maxime posibile ('K\_max') si evalueaza toate combinatiile posibile: **O(P \* D \* K\_max)**.
+3. **Cazul mediu:**
+-Numarul de iteratii este undeva intre minim si maxim:  **O(P \* D \* K\_med)**.
 
-1. **Best Case:**
-   - If the inventory is always sufficient, only the `inventory_levels` list is updated. The complexity is **O(n)**.
 
-2. **Worst Case:**
-   - If the inventory falls below the reorder point for every request, an additional order is placed at each step. Nevertheless, operations are performed in a single iteration, so the complexity remains **O(n)**.
 
-3. **Average Case:**
-   - With random demand and variable inventory behavior, the complexity remains linear **O(n)**.
+#Demonstratia corectitudinii pentru functia simulate_inventory:
 
-## Function `differential_evolution`
+###Preconditii:
+    -'demand' este o lista de cereri pentru fiecare perioada.
+    -'reorder_point' este punctul optim de reaprovizionare
+    -'order_quantity' este cantitatea optima de reaprovizionare
 
-1. **Best Case:**
-   - If optimization converges quickly, the number of iterations is minimal. The complexity depends on the population size (`P`) and the number of parameters (`D`): **O(P \* D \* K\_min)**, where `K\_min` is the minimum number of iterations.
+###Scopul
+Scopul functiei este sa calculeze nivelurile de inventar pentru fiecare perioada.
 
-2. **Worst Case:**
-   - The algorithm requires all possible maximum iterations (`K\_max`) and evaluates all combinations. The complexity is **O(P \* D \* K\_max)**.
+###Postconditii:
+    -lista rezultata 'inventory_levels' reflecta corect evolutia inventarului in fiecare perioada tinand cont de cererea('d') si reaprovizionarea daca inventarul scade sub sau egal cu 'reorder_point'.
 
-3. **Average Case:**
-   - The number of iterations lies between the minimum and maximum: **O(P \* D \* K\_med)**.
+###Demonstratia corectitudinii:
+####Initializare:
 
----
+La inceputul executiei:
+    -'inventory_level' este initializat cu valoarea 'reorder_point', ceea ce asigura ca punctul de plecare este corect conform parametrilor primiti.
 
-# Proof of Correctness for `simulate_inventory`
+####Mentinerea invariantelor:
+In fiecare iteratie:
+- **Verificarea conditiei**
+        -Se verifica daca 'inventory_level <= reorder_point'. Daca aceasta conditie este adevarata, se adauga 'order_quantity' la inventar.
+        -Aceasta asigura ca reaprovizionarea are loc doar cand este necesara, conform punctului de reaprovizionare.
+  - **Salvarea nivelului intervalului**
+          -"inventory_levels.append(inventory_level)":
+        -Nivelul curent al inventarului este salvat inainte de scaderea cererii curente, reflectand situatia corecta la inceputul perioadei.
+  -**Actualizare inventar**
+          -'inventory_level -= d':
+            -Cererea curenta este scazuta din inventar, actualizand nivelul de inventar pentru urmatoarea perioada.
 
-### Preconditions:
-- `demand` is a list of requests for each period.
-- `reorder_point` is the optimal reorder point.
-- `order_quantity` is the optimal reorder quantity.
+####Invarianti:
+- Inventarul este actualizat corect in functie de cerere si reaprovizionare.
+- Fiecare pas adauga un singur element la 'inventory_levels'.
 
-### Goal:
-The function aims to calculate inventory levels for each period.
-
-### Postconditions:
-- The resulting `inventory_levels` list correctly reflects the inventory evolution in each period, accounting for demand (`d`) and restocking when inventory falls below or equals `reorder_point`.
-
-### Proof of Correctness:
-
-#### Initialization:
-At the beginning of execution:
-- `inventory_level` is initialized to the value of `reorder_point`, ensuring the starting point is correct based on the provided parameters.
-
-#### Maintaining Invariants:
-In each iteration:
-- **Condition Check:**
-  - If `inventory_level <= reorder_point`, `order_quantity` is added to the inventory.
-  - This ensures restocking occurs only when necessary, based on the reorder point.
-
-- **Save Inventory Level:**
-  - `inventory_levels.append(inventory_level)`:
-    - The current inventory level is saved before subtracting the current demand, reflecting the correct state at the start of the period.
-
-- **Update Inventory:**
-  - `inventory_level -= d`:
-    - The current demand is subtracted from the inventory, updating the inventory level for the next period.
-
-#### Invariants:
-- Inventory is updated correctly based on demand and restocking conditions.
-- Each step adds a single element to `inventory_levels`.
-
-#### Finalization:
-At the end of the loop:
-- The `inventory_levels` list contains the inventory levels for all demand periods.
-- The function returns the complete list.
+####Finalizare:
+La sfarsitul buclei:
+- Lista 'inventory_levels' contine valorile nivelurilor de inventar pentru toate perioadele cererii.
+- Functia returneaza lista completa.
